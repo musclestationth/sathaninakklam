@@ -190,9 +190,26 @@ async function initLiff() {
 
 initLiff();
 
-form.addEventListener("submit", function(e) {
+form.addEventListener("submit", async function(e) {
   e.preventDefault();
 
+let lineUserId = "";
+
+try {
+  if (typeof liff !== "undefined") {
+    if (!liff.isLoggedIn()) {
+      liff.login();
+      return;
+    }
+
+    const profile = await liff.getProfile();
+    lineUserId = profile.userId;
+  }
+} catch (err) {
+  alert("ดึงข้อมูล LINE ไม่สำเร็จ กรุณาเปิดผ่านแอป LINE");
+  return;
+}
+  
   const data = {
     userId: lineUserId,
     name: document.getElementById("name").value,
