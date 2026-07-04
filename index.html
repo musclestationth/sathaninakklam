@@ -167,31 +167,46 @@
     </div>
   </div>
 
-  <script>
-    const form = document.getElementById("bookingForm");
-    const submitBtn = document.getElementById("submitBtn");
-    const successBox = document.getElementById("successBox");
+<script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxun-Lm6DFq5GUu5jeeDleemmCsKB4sDCJRb17_MEHInBWwskQOaG1ZMgUOlJWsrEE/exec";
 
-    form.addEventListener("submit", function(e) {
-      e.preventDefault();
+const form = document.getElementById("bookingForm");
+const submitBtn = document.getElementById("submitBtn");
+const successBox = document.getElementById("successBox");
 
-      const data = {
-        name: document.getElementById("name").value,
-        phone: document.getElementById("phone").value,
-        date: document.getElementById("date").value,
-        time: document.getElementById("time").value,
-        package: document.getElementById("package").value,
-        note: document.getElementById("note").value
-      };
+form.addEventListener("submit", function(e) {
+  e.preventDefault();
 
-      console.log("Booking data:", data);
+  const data = {
+    name: document.getElementById("name").value,
+    phone: document.getElementById("phone").value,
+    date: document.getElementById("date").value,
+    time: document.getElementById("time").value,
+    package: document.getElementById("package").value,
+    note: document.getElementById("note").value
+  };
 
-      submitBtn.disabled = true;
-      submitBtn.innerText = "ส่งข้อมูลแล้ว";
+  submitBtn.disabled = true;
+  submitBtn.innerText = "กำลังส่งข้อมูล...";
 
-      form.style.display = "none";
-      successBox.style.display = "block";
-    });
-  </script>
+  fetch(SCRIPT_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  })
+  .then(response => response.json())
+  .then(result => {
+    form.style.display = "none";
+    successBox.style.display = "block";
+  })
+  .catch(error => {
+    alert("ส่งข้อมูลไม่สำเร็จ กรุณาลองใหม่");
+    submitBtn.disabled = false;
+    submitBtn.innerText = "ส่งข้อมูลการจอง";
+  });
+});
+</script>
 </body>
 </html>
