@@ -176,7 +176,7 @@
   </div>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxun-Lm6DFq5GUu5jeeDleemmCsKB4sDCJRb17_MEHInBWwskQOaG1ZMgUOlJWsrEE/exec?v=2";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxun-Lm6DFq5GUu5jeeDleemmCsKB4sDCJRb17_MEHInBWwskQOaG1ZMgUOlJWsrEE/exec";
 const LIFF_ID = "2010600499-kGjbynE1";
 
 const form = document.getElementById("bookingForm");
@@ -224,20 +224,28 @@ try {
     note: document.getElementById("note").value
   };
 
-const bookedRes = await fetch(
-  SCRIPT_URL +
-  "?action=bookedTimes" +
-  "&date=" + encodeURIComponent(data.date) +
-  "&package=" + encodeURIComponent(data.package)
-);
+try {
 
-const bookedTimes = await bookedRes.json();
+  const bookedRes = await fetch(
+    SCRIPT_URL +
+    "?action=bookedTimes" +
+    "&date=" + encodeURIComponent(data.date) +
+    "&package=" + encodeURIComponent(data.package)
+  );
 
-if (bookedTimes.includes(data.time)) {
-  alert("เต็มแล้ว กรุณาเลือกเวลาอื่น");
-  await loadBookedTimes();
+  const bookedTimes = await bookedRes.json();
+
+  if (bookedTimes.includes(data.time)) {
+    alert("เต็มแล้ว กรุณาเลือกเวลาอื่น");
+    return;
+  }
+
+} catch(err) {
+  alert("ERROR: " + err.message);
+  console.log(err);
   return;
 }
+  
 
 submitBtn.disabled = true;
 submitBtn.innerText = "กำลังส่งข้อมูล...";
