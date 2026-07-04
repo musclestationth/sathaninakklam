@@ -158,10 +158,14 @@
       <button type="submit" id="submitBtn">ส่งข้อมูลการจอง</button>
     </form>
 
-    <div class="success" id="successBox">
-      ส่งข้อมูลเรียบร้อยแล้ว<br>
-      กรุณารอพนักงานยืนยันคิว
-    </div>
+<div class="success" id="successBox">
+  <h3>✅ ส่งข้อมูลเรียบร้อยแล้ว</h3>
+  <p>กรุณารอพนักงานยืนยันคิว</p>
+
+  <button type="button" onclick="liff.closeWindow()">
+    ปิดหน้าต่าง
+  </button>
+</div>
 
     <div class="note">
       หากต้องการเปลี่ยนแปลงเวลา กรุณาติดต่อพนักงานเคาน์เตอร์ หรือโทร. 098 193 5691
@@ -210,11 +214,7 @@ form.addEventListener("submit", function(e) {
   form.style.display = "none";
   successBox.style.display = "block";
 
-<div class="success" id="successBox">
-  ส่งข้อมูลเรียบร้อยแล้ว<br>
-  กรุณารอพนักงานยืนยันคิว<br><br>
-  <button onclick="liff.closeWindow()">ปิดหน้าต่าง</button>
-</div>
+
 });
 </script>
 </body>
