@@ -173,7 +173,7 @@
   </div>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxun-Lm6DFq5GUu5jeeDleemmCsKB4sDCJRb17_MEHInBWwskQOaG1ZMgUOlJWsrEE/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxun-Lm6DFq5GUu5jeeDleemmCsKB4sDCJRb17_MEHInBWwskQOaG1ZMgUOlJWsrEE/exec?v=2";
 const LIFF_ID = "2010600499-kGjbynE1";
 
 const form = document.getElementById("bookingForm");
@@ -192,6 +192,7 @@ initLiff();
 
 form.addEventListener("submit", async function(e) {
   e.preventDefault();
+  alert("ใช้ไฟล์ HTML เวอร์ชันใหม่แล้ว");
 
 let lineUserId = "";
 
