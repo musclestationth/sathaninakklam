@@ -210,11 +210,11 @@ form.addEventListener("submit", function(e) {
   form.style.display = "none";
   successBox.style.display = "block";
 
-  setTimeout(() => {
-    if (typeof liff !== "undefined" && liff.isInClient()) {
-      liff.closeWindow();
-    }
-  }, 800);
+<div class="success" id="successBox">
+  ส่งข้อมูลเรียบร้อยแล้ว<br>
+  กรุณารอพนักงานยืนยันคิว<br><br>
+  <button onclick="liff.closeWindow()">ปิดหน้าต่าง</button>
+</div>
 });
 </script>
 </body>
