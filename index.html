@@ -196,10 +196,15 @@ initLiff();
 form.addEventListener("submit", async function(e) {
   e.preventDefault();
 
+  // กันกดซ้ำ
+  if (submitBtn.disabled) return;
 
-let lineUserId = "";
+  submitBtn.disabled = true;
+  submitBtn.innerText = "กำลังตรวจสอบคิว...";
 
-try {
+  let lineUserId = "";
+
+  try {
   if (typeof liff !== "undefined") {
     if (!liff.isLoggedIn()) {
       liff.login();
@@ -211,6 +216,8 @@ try {
   }
 } catch (err) {
   alert("ดึงข้อมูล LINE ไม่สำเร็จ กรุณาเปิดผ่านแอป LINE");
+  submitBtn.disabled = false;
+  submitBtn.innerText = "ส่งข้อมูลการจอง";
   return;
 }
   
@@ -235,22 +242,27 @@ try {
 
   const bookedTimes = await bookedRes.json();
 
-  if (bookedTimes.includes(data.time)) {
-    alert("เต็มแล้ว กรุณาเลือกเวลาอื่น");
-    return;
-  }
+if (bookedTimes.includes(data.time)) {
+  alert("เต็มแล้ว กรุณาเลือกเวลาอื่น");
+  submitBtn.disabled = false;
+  submitBtn.innerText = "ส่งข้อมูลการจอง";
+  await loadBookedTimes();
+  return;
+}
 
 } catch(err) {
   alert("ERROR: " + err.message);
   console.log(err);
+  submitBtn.disabled = false;
+  submitBtn.innerText = "ส่งข้อมูลการจอง";
   return;
 }
   
 
-submitBtn.disabled = true;
+
 submitBtn.innerText = "กำลังส่งข้อมูล...";
 
-fetch(SCRIPT_URL, {
+await fetch(SCRIPT_URL, {
   method: "POST",
   mode: "no-cors",
   body: JSON.stringify(data)
