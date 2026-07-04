@@ -189,23 +189,19 @@ form.addEventListener("submit", function(e) {
   submitBtn.disabled = true;
   submitBtn.innerText = "กำลังส่งข้อมูล...";
 
-  fetch(SCRIPT_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(data)
-  })
-  .then(response => response.json())
-  .then(result => {
-    form.style.display = "none";
-    successBox.style.display = "block";
-  })
-  .catch(error => {
-    alert("ส่งข้อมูลไม่สำเร็จ กรุณาลองใหม่");
-    submitBtn.disabled = false;
-    submitBtn.innerText = "ส่งข้อมูลการจอง";
-  });
+fetch(SCRIPT_URL, {
+  method: "POST",
+  body: JSON.stringify(data)
+})
+.then(() => {
+  form.style.display = "none";
+  successBox.style.display = "block";
+})
+.catch(error => {
+  alert("ส่งข้อมูลไม่สำเร็จ กรุณาลองใหม่");
+  submitBtn.disabled = false;
+  submitBtn.innerText = "ส่งข้อมูลการจอง";
+});
 });
 </script>
 </body>
