@@ -94,6 +94,9 @@
       background: #166534;
       text-align: center;
     }
+    option:disabled {
+  color: #999;
+}
   </style>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 </head>
@@ -235,6 +238,50 @@ try {
 
 
 });
+
+async function loadBookedTimes() {
+
+  const selectedDate =
+    document.getElementById("date").value;
+
+  const selectedPackage =
+    document.getElementById("package").value;
+
+  if (!selectedDate || !selectedPackage) return;
+
+  const res = await fetch(
+    SCRIPT_URL +
+    "?action=bookedTimes" +
+    "&date=" + encodeURIComponent(selectedDate) +
+    "&package=" + encodeURIComponent(selectedPackage)
+  );
+
+  const bookedTimes = await res.json();
+
+  const timeSelect = document.getElementById("time");
+
+  Array.from(timeSelect.options).forEach(option => {
+
+    if (!option.value) return;
+
+    if (bookedTimes.includes(option.value)) {
+
+      option.disabled = true;
+      option.text = option.value + " (เต็ม)";
+
+    } else {
+
+      option.disabled = false;
+      option.text = option.value;
+    }
+  });
+}
+  
+  document.getElementById("date")
+  .addEventListener("change", loadBookedTimes);
+
+document.getElementById("package")
+  .addEventListener("change", loadBookedTimes);
 </script>
 </body>
 </html>
