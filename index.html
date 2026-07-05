@@ -242,30 +242,33 @@ submitBtn.innerText = "กำลังส่งข้อมูล...";
 
 
   
-const res = await fetch(SCRIPT_URL, {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify(data)
-});
+try {
+  const res = await fetch(SCRIPT_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "text/plain;charset=utf-8"
+    },
+    body: JSON.stringify(data)
+  });
 
-const result = await res.json();
+  const result = await res.json();
 
-if (!result.success) {
-  alert(result.message);
+  if (!result.success) {
+    alert(result.message);
+    submitBtn.disabled = false;
+    submitBtn.innerText = "ส่งข้อมูลการจอง";
+    return;
+  }
+
+  form.style.display = "none";
+  successBox.style.display = "block";
+
+} catch (err) {
+  alert("ส่งข้อมูลไม่สำเร็จ: " + err.message);
   submitBtn.disabled = false;
   submitBtn.innerText = "ส่งข้อมูลการจอง";
   return;
 }
-
-
-
-
-  
-
-form.style.display = "none";
-successBox.style.display = "block";
 
 });
 
