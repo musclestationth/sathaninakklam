@@ -262,7 +262,7 @@ if (bookedTimes.includes(data.time)) {
 
 submitBtn.innerText = "กำลังส่งข้อมูล...";
 
-await fetch(SCRIPT_URL, {
+fetch(SCRIPT_URL, {
   method: "POST",
   mode: "no-cors",
   body: JSON.stringify(data)
