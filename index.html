@@ -162,7 +162,9 @@
     </form>
 
 <div class="success" id="successBox">
-  <h3>✅ ยืนยันการจองสำเร็จ</h3>
+  <h3>⏳ ส่งคำขอจองแล้ว</h3>
+<p>กรุณารอข้อความยืนยันการจองใน LINE</p>
+<p>หากไม่ได้รับข้อความ แปลว่าเวลานี้อาจเต็มแล้ว กรุณาเลือกเวลาอื่น</p>
   
 
   <button type="button" onclick="liff.closeWindow()">
@@ -238,11 +240,29 @@ submitBtn.innerText = "กำลังส่งข้อมูล...";
 submitBtn.disabled = true;
 submitBtn.innerText = "กำลังส่งข้อมูล...";
 
-fetch(SCRIPT_URL, {
+
+  
+const res = await fetch(SCRIPT_URL, {
   method: "POST",
-  mode: "no-cors",
+  headers: {
+    "Content-Type": "application/json"
+  },
   body: JSON.stringify(data)
 });
+
+const result = await res.json();
+
+if (!result.success) {
+  alert(result.message);
+  submitBtn.disabled = false;
+  submitBtn.innerText = "ส่งข้อมูลการจอง";
+  return;
+}
+
+
+
+
+  
 
 form.style.display = "none";
 successBox.style.display = "block";
