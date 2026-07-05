@@ -199,8 +199,8 @@ form.addEventListener("submit", async function(e) {
   // กันกดซ้ำ
   if (submitBtn.disabled) return;
 
-  submitBtn.disabled = true;
-  submitBtn.innerText = "กำลังตรวจสอบคิว...";
+submitBtn.disabled = true;
+submitBtn.innerText = "กำลังส่งข้อมูล...";
 
   let lineUserId = "";
 
@@ -231,35 +231,11 @@ form.addEventListener("submit", async function(e) {
     note: document.getElementById("note").value
   };
 
-try {
 
-  const bookedRes = await fetch(
-    SCRIPT_URL +
-    "?action=bookedTimes" +
-    "&date=" + encodeURIComponent(data.date) +
-    "&package=" + encodeURIComponent(data.package)
-  );
-
-  const bookedTimes = await bookedRes.json();
-
-if (bookedTimes.includes(data.time)) {
-  alert("เต็มแล้ว กรุณาเลือกเวลาอื่น");
-  submitBtn.disabled = false;
-  submitBtn.innerText = "ส่งข้อมูลการจอง";
-  await loadBookedTimes();
-  return;
-}
-
-} catch(err) {
-  alert("ERROR: " + err.message);
-  console.log(err);
-  submitBtn.disabled = false;
-  submitBtn.innerText = "ส่งข้อมูลการจอง";
-  return;
-}
   
 
 
+submitBtn.disabled = true;
 submitBtn.innerText = "กำลังส่งข้อมูล...";
 
 fetch(SCRIPT_URL, {
