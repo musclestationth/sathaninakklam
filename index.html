@@ -173,6 +173,15 @@
   </button>
 </div>
 
+    <div class="success" id="cancelBox">
+  <h3>ยกเลิกการจอง</h3>
+  <p>คุณต้องการยกเลิกการจองนี้ใช่ไหม?</p>
+
+  <button type="button" id="confirmCancelBtn">
+    ยืนยันยกเลิกการจอง
+  </button>
+</div>
+
     <div class="note">
       ขอบคุณที่ใช้บริการครับ
     </div>
@@ -186,6 +195,13 @@ const form = document.getElementById("bookingForm");
 const submitBtn = document.getElementById("submitBtn");
 const successBox = document.getElementById("successBox");
 
+  const cancelBox = document.getElementById("cancelBox");
+const confirmCancelBtn = document.getElementById("confirmCancelBtn");
+
+const params = new URLSearchParams(window.location.search);
+const mode = params.get("mode");
+const bookingId = params.get("bookingId");
+
   const originalTimeOptions = Array.from(document.getElementById("time").options) .map(opt => opt.value) .filter(v => v);
 
 async function initLiff() {
@@ -197,7 +213,11 @@ async function initLiff() {
 }
 
 initLiff();
-
+if (mode === "cancel" && bookingId) {
+  form.style.display = "none";
+  cancelBox.style.display = "block";
+}
+  
 form.addEventListener("submit", async function(e) {
   e.preventDefault();
 
@@ -326,6 +346,36 @@ document.getElementById("date")
 
 document.getElementById("package")
   .addEventListener("change", loadBookedTimes);
+
+confirmCancelBtn.addEventListener("click", async function () {
+  confirmCancelBtn.disabled = true;
+  confirmCancelBtn.innerText = "กำลังยกเลิก...";
+
+  const res = await fetch(SCRIPT_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "text/plain;charset=utf-8"
+    },
+    body: JSON.stringify({
+      action: "cancelBooking",
+      bookingId: bookingId
+    })
+  });
+
+  const result = await res.json();
+
+  alert(result.message);
+
+  if (result.success) {
+    liff.closeWindow();
+  } else {
+    confirmCancelBtn.disabled = false;
+    confirmCancelBtn.innerText = "ยืนยันยกเลิกการจอง";
+  }
+});
+
+
+  
 </script>
 </body>
 </html>
