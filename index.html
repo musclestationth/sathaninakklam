@@ -116,8 +116,15 @@
       <label>วันที่ต้องการจอง</label>
       <input type="date" id="date" required />
 
+            <label>แพ็กเกจ</label>
+      <select id="package" required>
+        <option value="">เลือกแพ็กเกจ</option>
+        <option value="1 คน 300 บาท / 20 นาที">1 คน 300 บาท / 20 นาที</option>
+        <option value="2 คน 500 บาท / 20 นาที">2 คน แช่รวมกัน 500 บาท / 20 นาที</option>
+      </select>
+
       <label>เวลาที่ต้องการจอง</label>
-      <select id="time" required>
+      <select id="time" required disabled>
   <option value="">เลือกเวลา</option>
   <option value="06:30">06:30</option>
   <option value="07:15">07:15</option>
@@ -141,12 +148,7 @@
   <option value="20:45">20:45</option>
 </select>
 
-      <label>แพ็กเกจ</label>
-      <select id="package" required>
-        <option value="">เลือกแพ็กเกจ</option>
-        <option value="1 คน 300 บาท / 20 นาที">1 คน 300 บาท / 20 นาที</option>
-        <option value="2 คน 500 บาท / 20 นาที">2 คน แช่รวมกัน 500 บาท / 20 นาที</option>
-      </select>
+
 
       <label>หมายเหตุเพิ่มเติม</label>
       <textarea id="note" placeholder="เช่น ต้องการช่วงเวลาใกล้เคียง ฯลฯ"></textarea>
@@ -162,10 +164,9 @@
     </form>
 
 <div class="success" id="successBox">
-  <h3>⏳ ส่งคำขอจองแล้ว</h3>
-<p>กรุณารอข้อความยืนยันการจองใน LINE</p>
-<p>หากไม่ได้รับข้อความ แปลว่าเวลานี้อาจเต็มแล้ว กรุณาเลือกเวลาอื่น</p>
-  
+  <h3>✅ จองสำเร็จ</h3>
+
+  <p>ระบบได้บันทึกการจองของคุณเรียบร้อยแล้ว</p>
 
   <button type="button" onclick="liff.closeWindow()">
     ปิดหน้าต่าง
@@ -184,6 +185,8 @@ const LIFF_ID = "2010600499-kGjbynE1";
 const form = document.getElementById("bookingForm");
 const submitBtn = document.getElementById("submitBtn");
 const successBox = document.getElementById("successBox");
+
+  const originalTimeOptions = Array.from(document.getElementById("time").options) .map(opt => opt.value) .filter(v => v);
 
 async function initLiff() {
   try {
@@ -273,14 +276,22 @@ try {
 });
 
 async function loadBookedTimes() {
+  const selectedDate = document.getElementById("date").value;
+  const selectedPackage = document.getElementById("package").value;
+  const timeSelect = document.getElementById("time");
 
-  const selectedDate =
-    document.getElementById("date").value;
+  timeSelect.value = "";
 
-  const selectedPackage =
-    document.getElementById("package").value;
+  if (!selectedDate || !selectedPackage) {
+    timeSelect.disabled = true;
+    timeSelect.innerHTML = `<option value="">เลือกวันที่และแพ็กเกจก่อน</option>`;
+    return;
+  }
 
-  if (!selectedDate || !selectedPackage) return;
+  timeSelect.disabled = true;
+  timeSelect.innerHTML = `<option value="">กำลังโหลดเวลา...</option>`;
+
+
 
   const res = await fetch(
     SCRIPT_URL +
@@ -291,36 +302,30 @@ async function loadBookedTimes() {
 
   const bookedTimes = await res.json();
 
-  const timeSelect = document.getElementById("time");
+  timeSelect.innerHTML = `<option value="">เลือกเวลา</option>`;
 
-  Array.from(timeSelect.options).forEach(option => {
+originalTimeOptions.forEach(time => {
+    const option = document.createElement("option");
+    option.value = time;
 
-    if (!option.value) return;
-
-    if (bookedTimes.includes(option.value)) {
-
+    if (bookedTimes.includes(time)) {
       option.disabled = true;
-      option.text = option.value + " (เต็ม)";
-
+      option.textContent = time + " (เต็ม)";
     } else {
-
-      option.disabled = false;
-      option.text = option.value;
+      option.textContent = time;
     }
+
+    timeSelect.appendChild(option);
   });
+
+  timeSelect.disabled = false;
 }
-  
-  document.getElementById("date")
+
+document.getElementById("date")
   .addEventListener("change", loadBookedTimes);
 
 document.getElementById("package")
   .addEventListener("change", loadBookedTimes);
-
-  document.getElementById("time")
-  .addEventListener("focus", loadBookedTimes);
-
-document.getElementById("time")
-  .addEventListener("click", loadBookedTimes);
 </script>
 </body>
 </html>
