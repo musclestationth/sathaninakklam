@@ -315,6 +315,12 @@ async function loadBookedTimes() {
 
 document.getElementById("package")
   .addEventListener("change", loadBookedTimes);
+
+  document.getElementById("time")
+  .addEventListener("focus", loadBookedTimes);
+
+document.getElementById("time")
+  .addEventListener("click", loadBookedTimes);
 </script>
 </body>
 </html>
