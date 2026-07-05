@@ -173,9 +173,9 @@
   </button>
 </div>
 
-    <div class="success" id="cancelBox">
+<div class="success" id="cancelBox" style="display:none;">
   <h3>ยกเลิกการจอง</h3>
-  <p>คุณต้องการยกเลิกการจองนี้ใช่ไหม?</p>
+  <p>คุณต้องการยกเลิกการจองนี้ใช่หรือไม่</p>
 
   <button type="button" id="confirmCancelBtn">
     ยืนยันยกเลิกการจอง
@@ -351,24 +351,31 @@ confirmCancelBtn.addEventListener("click", async function () {
   confirmCancelBtn.disabled = true;
   confirmCancelBtn.innerText = "กำลังยกเลิก...";
 
-  const res = await fetch(SCRIPT_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "text/plain;charset=utf-8"
-    },
-    body: JSON.stringify({
-      action: "cancelBooking",
-      bookingId: bookingId
-    })
-  });
+  try {
+    const res = await fetch(SCRIPT_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+      },
+      body: JSON.stringify({
+        action: "cancelBooking",
+        bookingId: bookingId
+      })
+    });
 
-  const result = await res.json();
+    const result = await res.json();
 
-  alert(result.message);
+    alert(result.message);
 
-  if (result.success) {
-    liff.closeWindow();
-  } else {
+    if (result.success) {
+      liff.closeWindow();
+    } else {
+      confirmCancelBtn.disabled = false;
+      confirmCancelBtn.innerText = "ยืนยันยกเลิกการจอง";
+    }
+
+  } catch (err) {
+    alert("ยกเลิกไม่สำเร็จ: " + err.message);
     confirmCancelBtn.disabled = false;
     confirmCancelBtn.innerText = "ยืนยันยกเลิกการจอง";
   }
