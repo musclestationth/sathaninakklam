@@ -228,23 +228,53 @@ async function initLiff() {
     console.log("LIFF init error", err);
   }
 }
+async function showCancelPage() {
+  bookingArea.style.display = "none";
 
+  const res = await fetch(
+    SCRIPT_URL +
+    "?action=getBooking&bookingId=" +
+    encodeURIComponent(bookingId)
+  );
+
+  const booking = await res.json();
+
+  if (booking.success && booking.status === "ยกเลิกแล้ว") {
+    cancelBox.innerHTML = `
+      <h3>❌ การจองนี้ถูกยกเลิกแล้ว</h3>
+      <p>รายการนี้ถูกยกเลิกไปก่อนหน้านี้แล้ว</p>
+
+      <button type="button" onclick="liff.closeWindow()">
+        ปิดหน้าต่าง
+      </button>
+    `;
+  } else {
+    cancelBox.innerHTML = `
+      <h3>ยกเลิกการจอง</h3>
+      <p>คุณต้องการยกเลิกการจองนี้ใช่หรือไม่</p>
+
+      <button type="button" id="confirmCancelBtn">
+        ยืนยันยกเลิกการจอง
+      </button>
+    `;
+
+    document
+      .getElementById("confirmCancelBtn")
+      .addEventListener("click", handleCancelBooking);
+  }
+
+  cancelBox.style.display = "block";
+}
 async function startApp() {
-
   await initLiff();
 
   if (mode === "cancel" && bookingId) {
-
-    bookingArea.style.display = "none";
-    cancelBox.style.display = "block";
-
+    await showCancelPage();
   } else {
-
     bookingArea.style.display = "block";
     cancelBox.style.display = "none";
     loadingBox.style.display = "none";
     form.style.display = "block";
-
   }
 
   document.body.style.visibility = "visible";
@@ -381,7 +411,7 @@ document.getElementById("date")
 document.getElementById("package")
   .addEventListener("change", loadBookedTimes);
 
-confirmCancelBtn.addEventListener("click", async function () {
+async function handleCancelBooking() {
   confirmCancelBtn.disabled = true;
   confirmCancelBtn.innerText = "กำลังยกเลิก...";
 
@@ -426,7 +456,7 @@ confirmCancelBtn.addEventListener("click", async function () {
       </button>
     `;
   }
-});
+}
 
 
   
