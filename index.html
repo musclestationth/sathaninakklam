@@ -167,6 +167,7 @@
       </div>
 
       <button type="submit" id="submitBtn">ส่งข้อมูลการจอง</button>
+      <div id="messageBox" style="display:none;"></div>
     </form>
 
 <div class="success" id="successBox">
@@ -178,6 +179,10 @@
     ปิดหน้าต่าง
   </button>
 </div>
+
+          <div class="note">
+      ขอบคุณที่ใช้บริการครับ
+    </div>
        </div> <!-- ปิด bookingArea ตรงนี้ -->
 
 
@@ -190,9 +195,7 @@
   </button>
 </div>
 
-    <div class="note">
-      ขอบคุณที่ใช้บริการครับ
-    </div>
+
   </div>
 
 <script>
@@ -202,6 +205,8 @@ const LIFF_ID = "2010600499-kGjbynE1";
 const form = document.getElementById("bookingForm");
 const submitBtn = document.getElementById("submitBtn");
 const successBox = document.getElementById("successBox");
+  const bookingArea = document.getElementById("bookingArea");
+const messageBox = document.getElementById("messageBox");
 
   const cancelBox = document.getElementById("cancelBox");
 const confirmCancelBtn = document.getElementById("confirmCancelBtn");
@@ -226,9 +231,10 @@ initLiff();
 const loadingBox = document.getElementById("loadingBox");
 
 if (mode === "cancel" && bookingId) {
-  loadingBox.style.display = "none";
+  bookingArea.style.display = "none";
   cancelBox.style.display = "block";
 } else {
+  bookingArea.style.display = "block";
   loadingBox.style.display = "none";
   form.style.display = "block";
 }
@@ -291,12 +297,19 @@ try {
 
   const result = await res.json();
 
-  if (!result.success) {
-    alert(result.message);
-    submitBtn.disabled = false;
-    submitBtn.innerText = "ส่งข้อมูลการจอง";
-    return;
-  }
+if (!result.success) {
+  messageBox.style.display = "block";
+  messageBox.style.marginTop = "15px";
+  messageBox.style.padding = "12px";
+  messageBox.style.borderRadius = "10px";
+  messageBox.style.background = "#7f1d1d";
+  messageBox.style.color = "#fff";
+  messageBox.innerText = result.message;
+
+  submitBtn.disabled = false;
+  submitBtn.innerText = "ส่งข้อมูลการจอง";
+  return;
+}
 
   form.style.display = "none";
   successBox.style.display = "block";
@@ -380,19 +393,32 @@ confirmCancelBtn.addEventListener("click", async function () {
 
     const result = await res.json();
 
-    alert(result.message);
-
     if (result.success) {
-      liff.closeWindow();
+      cancelBox.innerHTML = `
+        <h3>✅ ยกเลิกการจองแล้ว</h3>
+        <p>ระบบได้ยกเลิกการจองของคุณเรียบร้อยแล้ว</p>
+        <button type="button" onclick="liff.closeWindow()">
+          ปิดหน้าต่าง
+        </button>
+      `;
     } else {
-      confirmCancelBtn.disabled = false;
-      confirmCancelBtn.innerText = "ยืนยันยกเลิกการจอง";
+      cancelBox.innerHTML = `
+        <h3>⚠️ ไม่สามารถยกเลิกได้</h3>
+        <p>${result.message}</p>
+        <button type="button" onclick="liff.closeWindow()">
+          ปิดหน้าต่าง
+        </button>
+      `;
     }
 
   } catch (err) {
-    alert("ยกเลิกไม่สำเร็จ: " + err.message);
-    confirmCancelBtn.disabled = false;
-    confirmCancelBtn.innerText = "ยืนยันยกเลิกการจอง";
+    cancelBox.innerHTML = `
+      <h3>⚠️ เกิดข้อผิดพลาด</h3>
+      <p>ยกเลิกไม่สำเร็จ กรุณาลองใหม่อีกครั้ง</p>
+      <button type="button" onclick="liff.closeWindow()">
+        ปิดหน้าต่าง
+      </button>
+    `;
   }
 });
 
