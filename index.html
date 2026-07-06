@@ -105,8 +105,10 @@
   <div class="container">
     <h1>ICE BATH</h1>
     <div class="subtitle">จองคิวแช่น้ำแข็ง สถานีนักกล้าม</div>
-
-    <form id="bookingForm">
+<div id="loadingBox">
+  <p style="text-align:center;">กำลังโหลดข้อมูล...</p>
+</div>
+    <form id="bookingForm" style="display:none;">
       <label>ชื่อ-นามสกุล</label>
       <input type="text" id="name" required placeholder="กรอกชื่อของคุณ" />
 
@@ -213,9 +215,16 @@ async function initLiff() {
 }
 
 initLiff();
+
+
+const loadingBox = document.getElementById("loadingBox");
+
 if (mode === "cancel" && bookingId) {
-  form.style.display = "none";
+  loadingBox.style.display = "none";
   cancelBox.style.display = "block";
+} else {
+  loadingBox.style.display = "none";
+  form.style.display = "block";
 }
   
 form.addEventListener("submit", async function(e) {
