@@ -229,20 +229,28 @@ async function initLiff() {
   }
 }
 
-initLiff();
+async function startApp() {
 
+  await initLiff();
 
-if (mode === "cancel" && bookingId) {
-  bookingArea.style.display = "none";
-  cancelBox.style.display = "block";
-} else {
-  bookingArea.style.display = "block";
-  cancelBox.style.display = "none";
-  loadingBox.style.display = "none";
-  form.style.display = "block";
+  if (mode === "cancel" && bookingId) {
+
+    bookingArea.style.display = "none";
+    cancelBox.style.display = "block";
+
+  } else {
+
+    bookingArea.style.display = "block";
+    cancelBox.style.display = "none";
+    loadingBox.style.display = "none";
+    form.style.display = "block";
+
+  }
+
+  document.body.style.visibility = "visible";
 }
 
-document.body.style.visibility = "visible";
+startApp();
   
 form.addEventListener("submit", async function(e) {
   e.preventDefault();
