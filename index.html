@@ -6,13 +6,14 @@
   <title>จองคิว Ice Bath</title>
  
   <style>
-    body { 
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0f172a;
-      color: #fff;
-      padding: 20px;
-    }
+body { 
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0f172a;
+  color: #fff;
+  padding: 20px;
+  visibility: hidden;
+}
 
 .container {
   max-width: 480px;
@@ -20,7 +21,6 @@
   background: #111827;
   padding: 24px;
   border-radius: 18px;
-  visibility: hidden;
 }
 
     h1 {
@@ -208,7 +208,7 @@ const submitBtn = document.getElementById("submitBtn");
 const successBox = document.getElementById("successBox");
   const bookingArea = document.getElementById("bookingArea");
 
-  const container = document.querySelector(".container");
+
   
 const loadingBox = document.getElementById("loadingBox");
 
@@ -232,18 +232,17 @@ async function initLiff() {
 initLiff();
 
 
-
 if (mode === "cancel" && bookingId) {
   bookingArea.style.display = "none";
   cancelBox.style.display = "block";
-  container.style.visibility = "visible";
 } else {
   bookingArea.style.display = "block";
   cancelBox.style.display = "none";
   loadingBox.style.display = "none";
   form.style.display = "block";
-  container.style.visibility = "visible";
 }
+
+document.body.style.visibility = "visible";
   
 form.addEventListener("submit", async function(e) {
   e.preventDefault();
