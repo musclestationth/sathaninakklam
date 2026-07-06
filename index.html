@@ -97,12 +97,16 @@
     option:disabled {
   color: #999;
 }
+    #bookingArea {
+  display: none;
+}
   </style>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 </head>
 
 <body>
   <div class="container">
+    <div id="bookingArea">
     <h1>ICE BATH</h1>
     <div class="subtitle">จองคิวแช่น้ำแข็ง สถานีนักกล้าม</div>
 <div id="loadingBox">
@@ -174,6 +178,8 @@
     ปิดหน้าต่าง
   </button>
 </div>
+       </div> <!-- ปิด bookingArea ตรงนี้ -->
+
 
 <div class="success" id="cancelBox" style="display:none;">
   <h3>ยกเลิกการจอง</h3>
